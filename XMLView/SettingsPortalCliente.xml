@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Copyright (C) 2024 Daniel Fernández Giménez <hola@danielfg.es>
+ * @author Daniel Fernández Giménez <hola@danielfg.es>
+-->
+<view>
+    <columns>
+        <group name="data" icon="fas fa-chalkboard-user" numcolumns="12">
+            <column name="name" display="none" order="0">
+                <widget type="text" fieldname="name" readonly="true" required="true" />
+            </column>
+        </group>
+        <group name="estimations" title="estimations" icon="far fa-file-powerpoint" numcolumns="12">
+            <column name="approve" description="approve-estimations-desc" numcolumns="4" order="100">
+                <widget type="select" fieldname="group_approve_estimations">
+                    <values source="roles" fieldcode="codrole" fieldtitle="descripcion"/>
+                </widget>
+            </column>
+            <column name="cancel" description="cancel-estimations-desc" numcolumns="4" order="110">
+                <widget type="select" fieldname="group_cancel_estimations">
+                    <values source="roles" fieldcode="codrole" fieldtitle="descripcion"/>
+                </widget>
+            </column>
+        </group>
+        <group name="orders" title="orders" icon="fas fa-file-powerpoint" numcolumns="12">
+            <column name="cancel" description="cancel-orders-desc" numcolumns="4" order="100">
+                <widget type="select" fieldname="group_cancel_orders">
+                    <values source="roles" fieldcode="codrole" fieldtitle="descripcion"/>
+                </widget>
+            </column>
+        </group>
+        <group name="tickets" title="tickets" icon="far fa-comment-dots" numcolumns="12">
+            <column name="notify-tickets" description="notify-tickets-desc" numcolumns="4" order="100">
+                <widget type="select" fieldname="group_notify_tickets">
+                    <values source="roles" fieldcode="codrole" fieldtitle="descripcion"/>
+                </widget>
+            </column>
+        </group>
+    </columns>
+</view>

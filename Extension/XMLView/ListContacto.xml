@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Copyright (C) 2024 Daniel Fernández Giménez <hola@danielfg.es>
+ * @author Daniel Fernández Giménez <hola@danielfg.es>
+-->
+<view>
+    <columns>
+        <column name="pc-nick" title="nick" display="none" order="400">
+            <widget type="text" fieldname="pc_nick" readonly="dinamic"/>
+        </column>
+    </columns>
+</view>

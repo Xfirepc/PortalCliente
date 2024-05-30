@@ -1,0 +1,11 @@
+{#
+* Copyright (C) 2024 Daniel Fernández Giménez <hola@danielfg.es>
+* @author Daniel Fernández Giménez <hola@danielfg.es>
+#}
+
+<div class="form-check mb-2">
+    <input class="form-check-input" type="checkbox" name="pc_show" value="1" id="pcShowCheck{{ docfile.id }}" {{ docfile.pc_show ? 'checked' : '' }}>
+    <label class="form-check-label" for="pcShowCheck{{ docfile.id }}">
+        {{ trans('show-on-client-portal') }}
+    </label>
+</div>

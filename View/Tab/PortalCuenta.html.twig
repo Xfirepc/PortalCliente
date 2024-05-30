@@ -1,0 +1,208 @@
+{#
+* Copyright (C) 2024 Daniel Fernández Giménez <hola@danielfg.es>
+* @author Daniel Fernández Giménez <hola@danielfg.es>
+#}
+
+{% for item in getIncludeViews('PortalCuenta', 'contactBefore') %}
+    {% include item['path'] %}
+{% endfor %}
+
+<div class="shadow-sm mb-3">
+    <div class="card-body">
+        <form method="post" onsubmit="animateSpinner('add')">
+            {{ formToken() }}
+            <input type="hidden" name="action" value="edit-profile"/>
+            <input type="hidden" name="idcontacto" value="{{ fsc.contact.idcontacto }}"/>
+            <div class="form-row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        {{ trans('name') }}
+                        <input class="form-control" type="text" name="nombre" value="{{ fsc.contact.nombre | raw }}"
+                               autocomplete="off" maxlength="100" required/>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        {{ trans('surname') }}
+                        <input class="form-control" type="text" name="apellidos"
+                               value="{{ fsc.contact.apellidos | raw }}"
+                               autocomplete="off" maxlength="150"/>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        {{ trans('email') }}
+                        <input class="form-control" type="email" name="email" value="{{ fsc.contact.email }}"
+                               autocomplete="off" maxlength="100" required/>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ trans('company') }}
+                        <input class="form-control" type="text" name="empresa" value="{{ fsc.contact.empresa }}"
+                               autocomplete="off" maxlength="100"/>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        {{ trans('fiscal-id') }}
+                        <select class="form-control" name="tipoidfiscal">
+                            {% for tipo in fsc.codeModel.all('IdentificadorFiscal', '', '') %}
+                                {% if tipo.code == fsc.contact.tipoidfiscal %}
+                                    <option value="{{ tipo.code }}" selected="">{{ tipo.description }}</option>
+                                {% else %}
+                                    <option value="{{ tipo.code }}">{{ tipo.description }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        {{ trans('fiscal-number') }}
+                        <input class="form-control" type="text" name="cifnif" value="{{ fsc.contact.cifnif }}"
+                               autocomplete="off" maxlength="30"/>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ trans('address') }}
+                        <input class="form-control" type="text" name="direccion"
+                               value="{{ fsc.contact.direccion | raw }}"
+                               autocomplete="off" maxlength="100"/>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        {{ trans('post-office-box') }}
+                        <input class="form-control" type="text" name="apartado" value="{{ fsc.contact.apartado }}"
+                               maxlength="10" placeholder="{{ trans('optional') }}" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        {{ trans('zip-code') }}
+                        <input class="form-control" type="text" name="codpostal" value="{{ fsc.contact.codpostal }}"
+                               maxlength="10" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        {{ trans('city') }}
+                        <input class="form-control" type="text" name="ciudad" value="{{ fsc.contact.ciudad | raw }}"
+                               autocomplete="off" list="ciudad" maxlength="100"/>
+                        <datalist id="ciudad">
+                            {% for item in fsc.getCities() %}
+                                <option value="{{ item.ciudad }}"></option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        {{ trans('province') }}
+                        <input class="form-control" type="text" name="provincia"
+                               value="{{ fsc.contact.provincia | raw }}"
+                               autocomplete="off" list="provincia" maxlength="100"/>
+                        <datalist id="provincia">
+                            {% for item in fsc.getProvincies() %}
+                                <option value="{{ item.provincia }}"></option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        {{ trans('country') }}
+                        <select class="form-control" name="codpais">
+                            {% for pais in fsc.codeModel.all('Pais', '', '') %}
+                                {% if pais.code == fsc.contact.codpais %}
+                                    <option value="{{ pais.code }}" selected="">{{ pais.description }}</option>
+                                {% else %}
+                                    <option value="{{ pais.code }}">{{ pais.description }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        {{ trans('language') }}
+                        <select class="form-control" name="langcode">
+                            <option value="">------</option>
+                            {% for item in fsc.getLanguages() %}
+                                {% if item.value == fsc.contact.langcode %}
+                                    <option value="{{ item.value }}" selected="">{{ item.title }}</option>
+                                {% else %}
+                                    <option value="{{ item.value }}">{{ item.title }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-sm">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="1" name="admitemarketing"
+                               id="admitemarketing" {{ fsc.contact.admitemarketing ? 'checked' : '' }}>
+                        <label class="form-check-label" for="admitemarketing">
+                            {{ trans('receive-newsletter') }}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-sm-auto text-right">
+                    <button type="submit" class="btn btn-primary btn-spin-action">
+                        {{ trans('save') }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% for item in getIncludeViews('PortalCuenta', 'contactAfter') %}
+    {% include item['path'] %}
+{% endfor %}
+
+{% for item in getIncludeViews('PortalCuenta', 'passwordBefore') %}
+    {% include item['path'] %}
+{% endfor %}
+
+<div class="card border-warning shadow-sm mb-3">
+    <div class="card-header">
+        <h2 class="h5 mb-0">
+            <i class="fas fa-key fa-fw"></i> {{ trans('new-password') }}
+        </h2>
+    </div>
+    <div class="card-body">
+        <form method="post" onsubmit="animateSpinner('add')">
+            {{ formToken() }}
+            <input type="hidden" name="action" value="edit-password"/>
+            <input type="hidden" name="idcontacto" value="{{ fsc.contact.idcontacto }}"/>
+            <div class="form-row">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="new_password"
+                               placeholder="{{ trans('new-password') }}"/>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="repeat_password"
+                               placeholder="{{ trans('repeat-password') }}"/>
+                    </div>
+                </div>
+                <div class="col-sm-auto">
+                    <button type="submit" class="btn btn-warning btn-spin-action">
+                        {{ trans('save') }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% for item in getIncludeViews('PortalCuenta', 'passwordAfter') %}
+    {% include item['path'] %}
+{% endfor %}

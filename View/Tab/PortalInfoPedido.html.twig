@@ -1,0 +1,184 @@
+{#
+* Copyright (C) 2024 Daniel Fernández Giménez <hola@danielfg.es>
+* @author Daniel Fernández Giménez <hola@danielfg.es>
+#}
+
+{% set firstView = fsc.views | first %}
+{% set model = firstView.model %}
+{% set childrens = model.childrenDocuments() %}
+
+{% for item in getIncludeViews('PortalInfoPedido', 'infoBefore') %}
+    {% include item['path'] %}
+{% endfor %}
+
+<div class="card-group shadow mb-3">
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-striped mb-0">
+                <tbody>
+                <tr>
+                    <td class="text-center bg-white" colspan="2">
+                        <h2 class="h2 text-center">{{ money(model.total) }}</h2>
+                    </td>
+                </tr>
+                {% if model.editable %}
+                    <tr class="table-success">
+                        <td class="text-center" colspan="2">{{ model.getStatus().nombre }}</td>
+                    </tr>
+                {% elseif model.getStatus().generadoc is empty %}
+                    <tr class="table-danger">
+                        <td class="text-center" colspan="2">{{ model.getStatus().nombre }}</td>
+                    </tr>
+                {% endif %}
+                {% if childrens is not empty %}
+                    <tr class="table-success">
+                        <td class="text-center" colspan="2">
+                            {% for child in childrens %}
+                                <div>
+                                    {{ trans(child.getStatus().tipodoc ~ '-min') }}:
+                                    <a href="{{ asset(child.url('public')) }}">{{ child.codigo }}</a>
+                                </div>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>{{ trans('date') }}</td>
+                    <td class="text-right">{{ model.fecha }}</td>
+                </tr>
+                <tr>
+                    <td>{{ trans('hour') }}</td>
+                    <td class="text-right">{{ model.hora }}</td>
+                </tr>
+                <tr>
+                    <td>{{ trans('net') }}</td>
+                    <td class="text-right">{{ money(model.neto) }}</td>
+                </tr>
+                <tr>
+                    <td>{{ trans('taxes') }}</td>
+                    <td class="text-right">{{ money(model.totaliva) }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            {% if model.editable and childrens is empty %}
+                {{ fsc.getPaymentGatewayHtml() | raw }}
+            {% endif %}
+            {% if model.editable %}
+                <form action="{{ asset(model.url('public')) }}" method="post" onsubmit="animateSpinner('add')">
+                    {{ formToken() }}
+                    <input type="hidden" name="action" value="cancel">
+                    <button type="submit" class="btn btn-block btn-outline-danger mb-3 btn-spin-action">
+                        <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i> {{ trans('cancel') }}
+                    </button>
+                </form>
+            {% endif %}
+            <a class="btn btn-block btn-outline-info btn-spin-action"
+               href="{{ asset(model.url('public')) }}&action=print"
+               target="_blank">
+                <i class="fas fa-print fa-fw" aria-hidden="true"></i> {{ trans('print') }}
+            </a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-striped mb-0">
+                <tbody>
+                <tr>
+                    <td>{{ trans('name') }}</td>
+                    <td class="text-right">{{ model.nombrecliente | raw }}</td>
+                </tr>
+                {% if model.cifnif %}
+                    <tr>
+                        <td>{{ model.getSubject().tipoidfiscal }}</td>
+                        <td class="text-right">{{ model.cifnif }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>{{ trans('address') }}</td>
+                    <td class="text-right">{{ model.direccion | raw }}</td>
+                </tr>
+                {% if model.apartado %}
+                    <tr>
+                        <td>{{ trans('post-office-box') }}</td>
+                        <td class="text-right">{{ model.apartado }}</td>
+                    </tr>
+                {% endif %}
+                {% if model.codpostal %}
+                    <tr>
+                        <td>{{ trans('zip-code') }}</td>
+                        <td class="text-right">{{ model.codpostal }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>{{ trans('city') }}</td>
+                    <td class="text-right">{{ model.ciudad | raw }}</td>
+                </tr>
+                <tr>
+                    <td>{{ trans('province') }}</td>
+                    <td class="text-right">{{ model.provincia | raw }}</td>
+                </tr>
+                <tr>
+                    <td>{{ trans('country') }}</td>
+                    <td class="text-right">{{ model.country() }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow mb-3">
+    <div class="table-responsive">
+        <table class="table table-striped mb-0">
+            <thead>
+            <tr>
+                <th>{{ trans('product') }}</th>
+                <th class="text-right text-nowrap">{{ trans('quantity') }}</th>
+                <th class="text-right text-nowrap">{{ trans('price') }}</th>
+                <th class="text-right text-nowrap">{{ trans('dto') }}</th>
+                <th class="text-right text-nowrap">{{ trans('tax') }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for line in model.getLines() %}
+                <tr>
+                    <td>
+                        <b>{{ line.referencia }}</b> {{ line.descripcion | raw | nl2br }}
+                    </td>
+                    <td class="text-right text-nowrap">{{ line.cantidad }}</td>
+                    <td class="text-right text-nowrap">
+                        {{ money(line.pvpunitario) }}
+                    </td>
+                    <td class="text-right text-nowrap">
+                        {% if line.dtopor == 0 %}-{% else %}{{ line.dtopor }} %{% endif %}
+                    </td>
+                    <td class="text-right text-nowrap">{{ line.iva }} %</td>
+                </tr>
+            {% else %}
+                <tr class="table-warning">
+                    <td colspan="5">{{ trans('no-data') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if model.observaciones %}
+    <div class="card shadow mb-3">
+        <div class="card-header font-weight-bold">
+            {{ trans('observations') }}
+        </div>
+        <div class="card-body">
+            <p class="mb-0">{{ model.observaciones | raw | nl2br }}</p>
+        </div>
+    </div>
+{% endif %}
+
+{% for item in getIncludeViews('PortalInfoPedido', 'infoAfter') %}
+    {% include item['path'] %}
+{% endfor %}

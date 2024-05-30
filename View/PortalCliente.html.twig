@@ -1,0 +1,48 @@
+{#
+* Copyright (C) 2024 Daniel Fernández Giménez <hola@danielfg.es>
+* @author Daniel Fernández Giménez <hola@danielfg.es>
+#}
+
+{% extends "Master/PortalPanelTemplate.html.twig" %}
+
+{% block main %}
+<div class="w-100 bg-light">
+    <div class="container pt-3 pb-3">
+        <div class="form-row d-flex align-items-center">
+            <div class="col-sm">
+                <h1 class="h3 m-0 p-0">{{ trans('client-portal') }}</h1>
+                <p>{{ trans('welcome') }} <i>{{ fsc.contact.pc_nick }}</i></p>
+            </div>
+
+            {% for item in getIncludeViews('PortalCliente', 'buttonsBefore') %}
+                {% include item['path'] %}
+            {% endfor %}
+
+            {% block buttons %}
+                {% if fsc.user %}
+                    <div class="col-sm-auto text-right">
+                        <a class="btn btn-secondary" href="{{ asset(fsc.contact.url()) }}">
+                            <i class="fa-solid fa-circle-info"></i>
+                            {{ trans('details') }}
+                        </a>
+                    </div>
+                {% endif %}
+                <div class="col-sm-auto text-right">
+                    <form action="{{ asset('Me') }}" method="post">
+                        <button type="submit" name="action" value="logout" class="btn btn-danger"
+                                title="{{ trans('logout') }}">
+                            <i class="fas fa-door-open"></i>
+                            {{ trans('exit') }}
+                        </button>
+                    </form>
+                </div>
+            {% endblock %}
+
+            {% for item in getIncludeViews('PortalCliente', 'buttonsAfter') %}
+                {% include item['path'] %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{{ parent() }}
+{% endblock %}

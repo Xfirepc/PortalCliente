@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Copyright (C) 2024 Daniel Fernández Giménez <hola@danielfg.es>
+ * @author Daniel Fernández Giménez <hola@danielfg.es>
+-->
+<view>
+    <columns>
+        <group name="stripe" title="stripe" icon="fab fa-stripe-s" numcolumns="12">
+            <column name="payment-method" order="100">
+                <widget type="select" fieldname="pc_stripe_codpago" onclick="EditFormaPago">
+                    <values/>
+                </widget>
+            </column>
+            <column name="public-key" order="110">
+                <widget type="text" fieldname="pc_stripe_pk" icon="fas fa-key"/>
+            </column>
+            <column name="private-key" order="120">
+                <widget type="text" fieldname="pc_stripe_sk" icon="fas fa-key"/>
+            </column>
+        </group>
+    </columns>
+</view>

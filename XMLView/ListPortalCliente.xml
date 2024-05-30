@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Copyright (C) 2024 Daniel Fernández Giménez <hola@danielfg.es>
+ * @author Daniel Fernández Giménez <hola@danielfg.es>
+-->
+<view>
+    <columns>
+            <column name="nick" order="100">
+                <widget type="text" fieldname="pc_nick" maxlength="100" readonly="dinamic"/>
+            </column>
+
+            <column name="last-login" order="110">
+                <widget type="datetime" fieldname="pc_last_login" readonly="true"/>
+            </column>
+            <column name="last-ip" order="120">
+                <widget type="text" fieldname="pc_last_ip" readonly="true"/>
+            </column>
+            <column name="last-browser" numcolumns="12" order="130">
+                <widget type="textarea" fieldname="pc_last_browser" readonly="true"/>
+            </column>
+    </columns>
+</view>

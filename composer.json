@@ -1,0 +1,6 @@
+{
+    "require": {
+        "erusev/parsedown": "^1.7",
+        "stripe/stripe-php": "^13.11"
+    }
+}
