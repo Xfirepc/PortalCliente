@@ -19,14 +19,6 @@
             {% endfor %}
 
             {% block buttons %}
-                {% if fsc.user %}
-                    <div class="col-sm-auto text-right">
-                        <a class="btn btn-secondary" href="{{ asset(fsc.contact.url()) }}">
-                            <i class="fa-solid fa-circle-info"></i>
-                            {{ trans('details') }}
-                        </a>
-                    </div>
-                {% endif %}
                 <div class="col-sm-auto text-right">
                     <form action="{{ asset('Me') }}" method="post">
                         <button type="submit" name="action" value="logout" class="btn btn-danger"

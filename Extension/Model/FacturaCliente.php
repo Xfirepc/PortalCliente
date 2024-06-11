@@ -19,7 +19,7 @@ class FacturaCliente
                 return;
             }
 
-            return 'PortalFactura?code=' . $this->primaryColumnValue();
+            return 'EditPortalFacturaCliente?code=' . $this->primaryColumnValue();
         };
     }
 }
